@@ -54,12 +54,12 @@ to move-fish-sharks
 end
 
 to update-fish
-  ask n-of 100 patches with [pcolor = blue] [
+  ask n-of initial-fish patches with [pcolor = blue] [
   sprout-fish 1 [
     set energy 20
     set color brown
     set shape "fish"
-    set size 1
+    set size 1.2
   ]
 ]
 end
@@ -75,10 +75,10 @@ to update-algae
 end
 
 to update-sharks
-  ask n-of 100 patches with [pcolor = blue] [
+  ask n-of initial-shark patches with [pcolor = blue] [
   sprout-sharks 1 [
     set energy 20
-    set color grey
+    set color black
     set shape "arrow"
     set size 1.5
   ]
@@ -90,13 +90,13 @@ to reproduce-fish
     set energy 20
     set color brown
     set shape "fish"
-    set size 1
+    set size 1.2
   ]
 end
 to reproduce-sharks
   hatch 1 [ ; reproduce 1 or 2 sharks
     set energy 20
-    set color grey
+    set color black
     set shape "arrow"
     set size 1.5
   ]
@@ -117,7 +117,7 @@ end
 GRAPHICS-WINDOW
 210
 10
-647
+751
 448
 -1
 -1
@@ -128,11 +128,11 @@ GRAPHICS-WINDOW
 1
 1
 0
+0
+0
 1
-1
-1
--16
-16
+-20
+20
 -16
 16
 0
@@ -144,9 +144,9 @@ ticks
 BUTTON
 75
 63
-138
+139
 96
-NIL
+Setup
 setup
 NIL
 1
@@ -163,7 +163,7 @@ BUTTON
 104
 137
 137
-NIL
+Go
 go
 T
 1
@@ -174,6 +174,69 @@ NIL
 NIL
 NIL
 1
+
+MONITOR
+793
+73
+853
+118
+# of fish
+count fish
+17
+1
+11
+
+MONITOR
+862
+72
+939
+117
+# of sharks
+count sharks
+17
+1
+11
+
+MONITOR
+948
+72
+1019
+117
+# of algae
+count algae
+17
+1
+11
+
+SLIDER
+795
+146
+967
+179
+initial-fish
+initial-fish
+0
+500
+100.0
+1
+1
+NIL
+HORIZONTAL
+
+SLIDER
+796
+194
+968
+227
+initial-shark
+initial-shark
+0
+500
+100.0
+1
+1
+NIL
+HORIZONTAL
 
 @#$#@#$#@
 ## WHAT IS IT?
