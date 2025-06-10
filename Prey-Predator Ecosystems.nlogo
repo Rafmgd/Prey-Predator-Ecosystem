@@ -24,6 +24,8 @@ to go
   move-fish-sharks
   regrow-algae
   tick
+  if any? fish = false or any? sharks = false [ stop ]
+  if ticks >= 10000 [ stop ]
 end
 
 to move-fish-sharks
@@ -36,19 +38,19 @@ to move-fish-sharks
       set energy energy + 10
       if random 2 < 1 [ reproduce-fish ]
     ]
-  right  random-float 30 - 15
+  right  random 360
   forward random-float 1
   ]
   ask sharks[
-  set energy energy - 1
+  set energy energy - 2
   if energy <= 0 [die]
     let prey one-of fish-here
     if prey != nobody [
       ask prey [ die ]
-      set energy energy + 15
-      if random 2 < 1 [ reproduce-sharks ]
+      set energy energy + 20
+      if random 4 < 3 [ reproduce-sharks ]
     ]
-  right  random-float 30 - 15
+  right  random 360
   forward random-float 1
   ]
 end
@@ -59,7 +61,7 @@ to update-fish
     set energy 20
     set color brown
     set shape "fish"
-    set size 1.2
+    set size 2
   ]
 ]
 end
@@ -75,37 +77,35 @@ to update-algae
 end
 
 to update-sharks
-  ask n-of initial-shark patches with [pcolor = blue] [
+  ask n-of initial-sharks patches with [pcolor = blue] [
   sprout-sharks 1 [
-    set energy 20
+    set energy 25 + random 26
     set color black
-    set shape "arrow"
-    set size 1.5
+    set shape "shark"
+    set size 3.5
   ]
 ]
 end
 
 to reproduce-fish
-  hatch 1 [ ; reproduce 1 or 2 fishes
+  hatch 1 [ ; reproduce 1 fish
     set energy 20
     set color brown
     set shape "fish"
-    set size 1.2
+    set size 2
   ]
 end
 to reproduce-sharks
-  hatch 1 [ ; reproduce 1 or 2 sharks
+  hatch 1 [ ; reproduce 1 shark
     set energy 20
     set color black
-    set shape "arrow"
-    set size 1.5
+    set shape "shark"
+    set size 3.5
   ]
 end
 
 to regrow-algae
-  ;; try to grow algae on 5 random water patches each tick
-  let spots patches with [pcolor = blue and not any? algae-here]
-  ask n-of min (list 50 count spots) spots [
+  ask n-of 50 patches with [pcolor = blue and not any? algae-here] [
     sprout-algae 1 [
       set color orange
       set shape "circle"
@@ -115,9 +115,9 @@ to regrow-algae
 end
 @#$#@#$#@
 GRAPHICS-WINDOW
-210
+15
 10
-751
+1336
 448
 -1
 -1
@@ -128,11 +128,11 @@ GRAPHICS-WINDOW
 1
 1
 0
-0
-0
 1
--20
-20
+1
+1
+-50
+50
 -16
 16
 0
@@ -142,10 +142,10 @@ ticks
 30.0
 
 BUTTON
-75
-63
-139
-96
+38
+466
+101
+499
 Setup
 setup
 NIL
@@ -159,10 +159,10 @@ NIL
 1
 
 BUTTON
-74
-104
-137
-137
+139
+468
+202
+501
 Go
 go
 T
@@ -176,10 +176,10 @@ NIL
 1
 
 MONITOR
-793
-73
-853
-118
+454
+470
+513
+515
 # of fish
 count fish
 17
@@ -187,36 +187,36 @@ count fish
 11
 
 MONITOR
-862
-72
-939
-117
-# of sharks
-count sharks
-17
-1
-11
-
-MONITOR
-948
-72
-1019
-117
+650
+469
+721
+514
 # of algae
 count algae
 17
 1
 11
 
+MONITOR
+543
+469
+620
+514
+# of sharks
+count sharks
+17
+1
+11
+
 SLIDER
-795
-146
-967
-179
+247
+473
+419
+506
 initial-fish
 initial-fish
 0
-500
+100
 100.0
 1
 1
@@ -224,19 +224,38 @@ NIL
 HORIZONTAL
 
 SLIDER
-796
-194
-968
-227
-initial-shark
-initial-shark
+247
+522
+419
+555
+initial-sharks
+initial-sharks
 0
-500
-100.0
+100
+50.0
 1
 1
 NIL
 HORIZONTAL
+
+PLOT
+739
+456
+1284
+576
+Population Over Time
+Time
+Population
+0.0
+10.0
+0.0
+10.0
+true
+false
+"" ""
+PENS
+"fish" 1.0 0 -6459832 true "" "plot count fish"
+"sharks" 1.0 0 -13345367 true "" "plot count sharks"
 
 @#$#@#$#@
 ## WHAT IS IT?
@@ -289,6 +308,14 @@ arrow
 true
 0
 Polygon -7500403 true true 150 0 0 150 105 150 105 293 195 293 195 150 300 150
+
+bear
+true
+0
+
+bearbear polygon 0.0 0.6 0.2 0.7 0.3 0.6 0.2 0.5 0.0 0.6 polygon -0.2 0.7 -0.1 0.6 -0.2 0.5 -0.3 0.6 -0.2 0.7 polygon -0.3 -0.2 0.3 -0.2 0.3 0.3 -0.3 0.3 -0.3 -0.2 polygon -0.2 -0.4 -0.1 -0.2 -0.3 -0.2 -0.2 -0.4 polygon 0.2 -0.4 0.3 -0.2 0.1 -0.2 0.2 -0.4 polygon -0.15 0.0 -0.05 0.0 -0.05 0.1 -0.15 0.1 -0.15 0.0 polygon 0.05 0.0 0.15 0.0 0.15 0.1 0.05 0.1 0.05 0.0 
+true
+0
 
 box
 false
@@ -467,6 +494,19 @@ Polygon -7500403 true true 135 105 90 60 45 45 75 105 135 135
 Polygon -7500403 true true 165 105 165 135 225 105 255 45 210 60
 Polygon -7500403 true true 135 90 120 45 150 15 180 45 165 90
 
+shark
+false
+0
+Polygon -7500403 true true 283 153 288 149 271 146 301 145 300 138 247 119 190 107 104 117 54 133 39 134 10 99 9 112 19 142 9 175 10 185 40 158 69 154 64 164 80 161 86 156 132 160 209 164
+Polygon -7500403 true true 199 161 152 166 137 164 169 154
+Polygon -7500403 true true 188 108 172 83 160 74 156 76 159 97 153 112
+Circle -16777216 true false 256 129 12
+Line -16777216 false 222 134 222 150
+Line -16777216 false 217 134 217 150
+Line -16777216 false 212 134 212 150
+Polygon -7500403 true true 78 125 62 118 63 130
+Polygon -7500403 true true 121 157 105 161 101 156 106 152
+
 sheep
 false
 15
@@ -498,15 +538,6 @@ star
 false
 0
 Polygon -7500403 true true 151 1 185 108 298 108 207 175 242 282 151 216 59 282 94 175 3 108 116 108
-
-target
-false
-0
-Circle -7500403 true true 0 0 300
-Circle -16777216 true false 30 30 240
-Circle -7500403 true true 60 60 180
-Circle -16777216 true false 90 90 120
-Circle -7500403 true true 120 120 60
 
 tree
 false
@@ -587,6 +618,17 @@ NetLogo 6.4.0
 @#$#@#$#@
 @#$#@#$#@
 default
+0.0
+-0.2 0 0.0 1.0
+0.0 1 1.0 0.0
+0.2 0 0.0 1.0
+link direction
+true
+0
+Line -7500403 true 150 150 90 180
+Line -7500403 true 150 150 210 180
+
+fish
 0.0
 -0.2 0 0.0 1.0
 0.0 1 1.0 0.0
